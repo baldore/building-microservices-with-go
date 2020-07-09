@@ -9,17 +9,20 @@ import (
 	"time"
 
 	"github.com/baldore/building-microservices-with-go/handlers"
+	"github.com/gorilla/mux"
 )
 
 func main() {
 	l := log.New(os.Stdout, "product-api: ", log.LstdFlags)
 
 	hh := handlers.NewHello(l)
-	gh := handlers.NewGoodbye(l)
+	// gh := handlers.NewGoodbye(l)
 
-	sm := http.NewServeMux()
-	sm.Handle("/", hh)
-	sm.Handle("/goodbye", gh)
+	sm := mux.NewRouter()
+
+	sm.HandleFunc("/hello", hh.SayHello).Methods("GET")
+
+	sm.NotFoundHandler = handlers.Handle404
 
 	s := &http.Server{
 		Addr:    ":9090",
