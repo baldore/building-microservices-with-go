@@ -12,17 +12,24 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func main() {
-	l := log.New(os.Stdout, "product-api: ", log.LstdFlags)
-
+func setupServer(l *log.Logger) *mux.Router {
 	hh := handlers.NewHello(l)
-	// gh := handlers.NewGoodbye(l)
+	ph := handlers.NewProducts(l)
 
 	sm := mux.NewRouter()
+	sm.NotFoundHandler = handlers.Handle404
 
 	sm.HandleFunc("/hello", hh.SayHello).Methods("GET")
 
-	sm.NotFoundHandler = handlers.Handle404
+	sm.HandleFunc("/products", ph.GetProducts).Methods("GET")
+
+	return sm
+}
+
+func main() {
+	l := log.New(os.Stdout, "product-api: ", log.LstdFlags)
+
+	sm := setupServer(l)
 
 	s := &http.Server{
 		Addr:    ":9090",

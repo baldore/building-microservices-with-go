@@ -10,9 +10,9 @@ type HTTPError struct {
 	Message string `json:"message"`
 }
 
-var Handle404 = http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+var Handle404 = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	// rw.Write([]byte("Page not found, my friend"))
-	json.NewEncoder(rw).Encode(HTTPError{
+	json.NewEncoder(w).Encode(HTTPError{
 		Code:    http.StatusNotFound,
 		Message: http.StatusText(http.StatusNotFound),
 	})

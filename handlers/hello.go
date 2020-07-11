@@ -15,13 +15,13 @@ func NewHello(l *log.Logger) *Hello {
 	return &Hello{l}
 }
 
-func (h *Hello) SayHello(rw http.ResponseWriter, r *http.Request) {
+func (h *Hello) SayHello(w http.ResponseWriter, r *http.Request) {
 	h.l.Println("hola mundo genial")
 	d, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(rw, "IT'S BROKEN!!!", http.StatusBadRequest)
+		http.Error(w, "IT'S BROKEN!!!", http.StatusBadRequest)
 		return
 	}
 
-	fmt.Fprintf(rw, "Hello %s", d)
+	fmt.Fprintf(w, "Hello %s", d)
 }
