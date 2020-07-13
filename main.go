@@ -22,6 +22,7 @@ func setupServer(l *log.Logger) *mux.Router {
 	sm.HandleFunc("/hello", hh.SayHello).Methods("GET")
 
 	sm.HandleFunc("/products", ph.GetProducts).Methods("GET")
+	sm.HandleFunc("/products", ph.AddProduct).Methods("POST")
 
 	return sm
 }

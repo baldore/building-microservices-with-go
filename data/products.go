@@ -10,11 +10,16 @@ type Product struct {
 	ID          int     `json:"id"`
 	Name        string  `json:"name"`
 	Description string  `json:"description"`
-	Price       float32 `json:"prince"`
+	Price       float32 `json:"price"`
 	SKU         string  `json:"sku"`
 	CreatedOn   string  `json:"-"`
 	UpdatedOn   string  `json:"-"`
 	DeletedOn   string  `json:"-"`
+}
+
+func (p *Product) FromJSON(r io.Reader) error {
+	dec := json.NewDecoder(r)
+	return dec.Decode(p)
 }
 
 type Products []*Product
@@ -24,8 +29,18 @@ func (p *Products) ToJSON(r io.Writer) error {
 	return e
 }
 
+func AddProduct(p *Product) {
+	p.ID = getNextId()
+	productList = append(productList, p)
+}
+
 func GetProducts() Products {
 	return productList
+}
+
+func getNextId() int {
+	lp := productList[len(productList)-1]
+	return lp.ID + 1
 }
 
 // Hardcoded product list
