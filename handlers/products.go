@@ -31,6 +31,7 @@ func (p *Products) GetProducts(w http.ResponseWriter, r *http.Request) {
 	err := pl.ToJSON(w)
 	if err != nil {
 		http.Error(w, "Unable to marshal json", http.StatusInternalServerError)
+		return
 	}
 }
 
@@ -41,6 +42,7 @@ func (p *Products) AddProduct(w http.ResponseWriter, r *http.Request) {
 	err := np.FromJSON(r.Body)
 	if err != nil {
 		http.Error(w, "Unable to process data", http.StatusBadRequest)
+		return
 	}
 
 	data.AddProduct(np)
