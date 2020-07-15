@@ -19,10 +19,11 @@ func setupServer(l *log.Logger) *mux.Router {
 	sm := mux.NewRouter()
 	sm.NotFoundHandler = handlers.Handle404
 
-	sm.HandleFunc("/hello", hh.SayHello).Methods("GET")
+	sm.HandleFunc("/hello", hh.SayHello).Methods(http.MethodGet)
 
-	sm.HandleFunc("/products", ph.GetProducts).Methods("GET")
-	sm.HandleFunc("/products", ph.AddProduct).Methods("POST")
+	sm.HandleFunc("/products", ph.GetProducts).Methods(http.MethodGet)
+	sm.HandleFunc("/products", ph.AddProduct).Methods(http.MethodPost)
+	sm.HandleFunc("/products/{id}", ph.UpdateProducts).Methods(http.MethodPut)
 
 	return sm
 }

@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/baldore/building-microservices-with-go/data"
+	"github.com/gorilla/mux"
 )
 
 type Products struct {
@@ -46,6 +48,33 @@ func (p *Products) AddProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data.AddProduct(np)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(sourceCreatedResponse)
+}
+
+func (p *Products) UpdateProducts(w http.ResponseWriter, r *http.Request) {
+	p.l.Println("Handle update products")
+
+	up := &data.Product{}
+	if err := up.FromJSON(r.Body); err != nil {
+		http.Error(w, "Unable to process data", http.StatusBadRequest)
+		return
+	}
+
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		http.Error(w, "Error: id must be an int", http.StatusBadRequest)
+		return
+	}
+
+	err = data.UpdateProduct(id, up)
+	if err != nil {
+		http.Error(w, "Product not found", http.StatusBadRequest)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

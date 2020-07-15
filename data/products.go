@@ -2,9 +2,12 @@ package data
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"time"
 )
+
+var ErrProductNotFound = fmt.Errorf("Product not found")
 
 type Product struct {
 	ID          int     `json:"id"`
@@ -41,6 +44,27 @@ func GetProducts() Products {
 func getNextId() int {
 	lp := productList[len(productList)-1]
 	return lp.ID + 1
+}
+
+func UpdateProduct(id int, p *Product) error {
+	i, err := findProductIndex(id)
+	if err != nil {
+		return err
+	}
+
+	p.ID = id
+	productList[i] = p
+
+	return nil
+}
+
+func findProductIndex(id int) (int, error) {
+	for i := range productList {
+		if productList[i].ID == id {
+			return i, nil
+		}
+	}
+	return -1, ErrProductNotFound
 }
 
 // Hardcoded product list
