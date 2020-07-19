@@ -24,6 +24,7 @@ func setupServer(l *log.Logger) *mux.Router {
 	sm.HandleFunc("/products", ph.GetProducts).Methods(http.MethodGet)
 	sm.HandleFunc("/products", ph.AddProduct).Methods(http.MethodPost)
 	sm.HandleFunc("/products/{id}", ph.UpdateProducts).Methods(http.MethodPut)
+	sm.HandleFunc("/products/{id}", ph.DeleteProducts).Methods(http.MethodDelete)
 
 	return sm
 }
@@ -44,6 +45,7 @@ func main() {
 
 	// TODO: What are go func (goroutines)?
 	go func() {
+		l.Print("Listening on port 9090")
 		err := s.ListenAndServe()
 		if err != nil {
 			l.Fatal(err)

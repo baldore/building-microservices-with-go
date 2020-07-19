@@ -58,6 +58,17 @@ func UpdateProduct(id int, p *Product) error {
 	return nil
 }
 
+func DeleteProduct(id int) error {
+	i, err := findProductIndex(id)
+	if err != nil {
+		return err
+	}
+
+	productList = append(productList[:i], productList[i+1:]...)
+
+	return nil
+}
+
 func findProductIndex(id int) (int, error) {
 	for i := range productList {
 		if productList[i].ID == id {

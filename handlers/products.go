@@ -80,3 +80,20 @@ func (p *Products) UpdateProducts(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(sourceCreatedResponse)
 }
+
+func (p *Products) DeleteProducts(w http.ResponseWriter, r *http.Request) {
+	p.l.Println("Handle delete products")
+
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		http.Error(w, "Error: id must be an int", http.StatusBadRequest)
+		return
+	}
+
+	err = data.DeleteProduct(id)
+	if err != nil {
+		http.Error(w, "Product not found", http.StatusBadRequest)
+		return
+	}
+}
